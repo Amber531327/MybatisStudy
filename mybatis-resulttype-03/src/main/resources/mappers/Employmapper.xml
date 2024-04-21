@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.Employmapper">
+
+    <select id="queryById" resultType="bieming">
+<!--        通过给数据库表字段加别名，让查询结果的每一列都和Java实体类中属性对应起来。-->
+<!--        select emp_id empId,emp_name empName, emp_salary empSalary from-->
+<!--        t_emp where emp_id = #{empId}-->
+<!--        开启了自动识别对应关系后就可以直接这样写-->
+        select * from
+        t_emp where emp_id = #{empId}
+    </select>
+    <select id="getSalaryById" resultType="_double">
+        select emp_salary from
+        t_emp where emp_id = #{empId}
+    </select>
+
+    <!-- Map<String,Object> selectEmpNameAndMaxSalary(); -->
+    <!-- 返回工资最高的员工的姓名和他的工资 -->
+<!--    员工姓名 ->key-->
+<!--    查询到的emp_name值  ->  value-->
+    <select id="selectEmpNameAndMaxSalary" resultType="map">
+        SELECT
+        emp_name 员工姓名,
+        emp_salary 员工工资,
+        (SELECT AVG(emp_salary) FROM t_emp) 部门平均工资
+        FROM t_emp WHERE emp_salary=(
+        SELECT MAX(emp_salary) FROM t_emp
+        )
+    </select>
+
+    <!-- List<Employee> selectAll(); -->
+<!--    resultType返回的是泛型类而不是List-->
+    <select id="selectAll" resultType="bieming">
+        select *
+        from t_emp
+    </select>
+
+
+<!--    1.自增长主键回显 auto_increment-->
+<!--    useGenerateKeys="true" 表示我们想要数据库自动增长的主键值-->
+<!--    keyColumn="emp_id" 主键列的值-->
+<!--    keyProperty="empId" 接收主键列值的属性-->
+    <insert id="insertEmp" useGeneratedKeys="true" keyColumn="emp_id" keyProperty="empId">
+        insert into t_emp(emp_name,emp_salary)
+        values(#{empName},#{empSalary})
+    </insert>
+
+
+<!--    声明resultMap标签，自定义映射规则-->
+<!--        id-> resultMap="标识"-->
+<!--        type->具体的返回值类型-->
+<!--            <id 主键的映射关系-->
+<!--             <result 普通列的映射关系       -->
+    <resultMap id="emp" type="pojo.Employee">
+        <id column="emp_id" property="empId"></id>
+        <result column="emp_salary" property="empSalary"></result>
+        <result column="emp_name" property="empName"></result>
+    </resultMap>
+    <select id="queryByIdmap" resultMap="emp">
+        select *
+        from t_emp
+    </select>
+</mapper>
