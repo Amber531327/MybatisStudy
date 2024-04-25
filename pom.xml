@@ -13,6 +13,8 @@
         <module>mybatis-param-02</module>
         <module>mybatis-resulttype-03</module>
         <module>mybatis-multiple-04</module>
+        <module>mybatis-dynamic-05</module>
+        <module>mybatis-mybatisx-06</module>
     </modules>
 
     <properties>
@@ -49,6 +51,13 @@
             <version>1.18.4</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>5.1.11</version>
+        </dependency>
+
     </dependencies>
 
 
